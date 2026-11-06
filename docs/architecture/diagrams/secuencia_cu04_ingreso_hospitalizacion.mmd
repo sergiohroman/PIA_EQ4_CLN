@@ -1,0 +1,29 @@
+sequenceDiagram
+    autonumber
+    actor Veterinario
+    box Aplicación
+    participant HospitalizacionApplicationService
+    participant IUnitOfWork
+    end
+    box Dominio
+    participant IHospitalizacionRepository
+    participant Hospitalizacion
+    participant Jaula
+    end
+    Veterinario->>HospitalizacionApplicationService: ingresarPaciente(IngresoInternadoDto)
+    HospitalizacionApplicationService->>IUnitOfWork: iniciar()
+    HospitalizacionApplicationService->>IHospitalizacionRepository: obtenerActual()
+    IHospitalizacionRepository-->>HospitalizacionApplicationService: Hospitalizacion
+    HospitalizacionApplicationService->>Hospitalizacion: ingresarPaciente(mascotaId, veterinarioId, motivo)
+    alt jaulas ocupadas < 10
+        Hospitalizacion->>Jaula: ocupar(mascotaId)
+        Hospitalizacion-->>HospitalizacionApplicationService: PacienteInternadoEvent
+        Note over Hospitalizacion: Si con este ingreso llega a 10, emite también CapacidadJaulasAlcanzadaEvent
+        HospitalizacionApplicationService->>IHospitalizacionRepository: save(hospitalizacion)
+        HospitalizacionApplicationService->>IUnitOfWork: commit()
+        HospitalizacionApplicationService-->>Veterinario: EstadoJaulasDto (ocupadas n/10)
+    else jaulas ocupadas = 10 (BR-002, US-12)
+        Hospitalizacion--xHospitalizacionApplicationService: lanza CapacidadMaximaJaulasAlcanzada
+        HospitalizacionApplicationService->>IUnitOfWork: rollback()
+        HospitalizacionApplicationService-->>Veterinario: Error "Capacidad máxima de jaulas alcanzada"
+    end

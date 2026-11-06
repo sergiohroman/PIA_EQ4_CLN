@@ -1,0 +1,21 @@
+caso_id,operacion_id,accion_sugerida,estado_inicial,resultado_alumno,instrucciones,evidencia
+VET-S001,VET-O001,completar,SOLICITADA,PROGRAMADA,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'completar' cuando el estado es PROGRAMADA
+VET-S002,VET-O002,cancelar,SOLICITADA,CANCELADA,Ejecutar la operacion y registrar evento o excepcion,EVENTO CitaCambioEstadoEvent PROGRAMADA->CANCELADA
+VET-S003,VET-O003,repetir_aprobacion,SOLICITADA,EN_ATENCION,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'aprobar' cuando el estado es EN_ATENCION
+VET-S004,VET-O004,saltar_estado,SOLICITADA,PROGRAMADA,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'completar' cuando el estado es PROGRAMADA
+VET-S005,VET-O005,aprobar,SOLICITADA,EN_ATENCION,Ejecutar la operacion y registrar evento o excepcion,EVENTO CitaCambioEstadoEvent PROGRAMADA->EN_ATENCION
+VET-S006,VET-O006,completar,SOLICITADA,PROGRAMADA,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'completar' cuando el estado es PROGRAMADA
+VET-S007,VET-O007,cancelar,SOLICITADA,CANCELADA,Ejecutar la operacion y registrar evento o excepcion,EVENTO CitaCambioEstadoEvent PROGRAMADA->CANCELADA
+VET-S008,VET-O008,repetir_aprobacion,SOLICITADA,EN_ATENCION,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'aprobar' cuando el estado es EN_ATENCION
+VET-S009,VET-O009,saltar_estado,SOLICITADA,PROGRAMADA,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'completar' cuando el estado es PROGRAMADA
+VET-S010,VET-O010,aprobar,SOLICITADA,EN_ATENCION,Ejecutar la operacion y registrar evento o excepcion,EVENTO CitaCambioEstadoEvent PROGRAMADA->EN_ATENCION
+VET-S011,VET-O011,completar,SOLICITADA,PROGRAMADA,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'completar' cuando el estado es PROGRAMADA
+VET-S012,VET-O012,cancelar,SOLICITADA,CANCELADA,Ejecutar la operacion y registrar evento o excepcion,EVENTO CitaCambioEstadoEvent PROGRAMADA->CANCELADA
+VET-S013,VET-O013,repetir_aprobacion,SOLICITADA,EN_ATENCION,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'aprobar' cuando el estado es EN_ATENCION
+VET-S014,VET-O014,saltar_estado,SOLICITADA,PROGRAMADA,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'completar' cuando el estado es PROGRAMADA
+VET-S015,VET-O015,aprobar,SOLICITADA,EN_ATENCION,Ejecutar la operacion y registrar evento o excepcion,EVENTO CitaCambioEstadoEvent PROGRAMADA->EN_ATENCION
+VET-S016,VET-O016,completar,SOLICITADA,PROGRAMADA,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'completar' cuando el estado es PROGRAMADA
+VET-S017,VET-O017,cancelar,SOLICITADA,CANCELADA,Ejecutar la operacion y registrar evento o excepcion,EVENTO CitaCambioEstadoEvent PROGRAMADA->CANCELADA
+VET-S018,VET-O018,repetir_aprobacion,SOLICITADA,EN_ATENCION,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'aprobar' cuando el estado es EN_ATENCION
+VET-S019,VET-O019,saltar_estado,SOLICITADA,PROGRAMADA,Ejecutar la operacion y registrar evento o excepcion,EXCEPCION TransicionInvalida: Cita: no se puede 'completar' cuando el estado es PROGRAMADA
+VET-S020,VET-O020,aprobar,SOLICITADA,EN_ATENCION,Ejecutar la operacion y registrar evento o excepcion,EVENTO CitaCambioEstadoEvent PROGRAMADA->EN_ATENCION

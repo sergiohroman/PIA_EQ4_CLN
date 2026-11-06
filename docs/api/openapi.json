@@ -1,0 +1,2724 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "VetCare 24 API",
+    "description": "\nAPI REST de **VetCare 24** (PIA – Componentes de Lógica de Negocios, Equipo 4).\n\nReglas principales: celular único por propietario (N-004), nota firmada inmutable (N-005),\nmáximo 10 jaulas ocupadas (BR-002), emergencias con prioridad máxima (N-007) y\nState Machine de citas. Errores: **404** no encontrado, **409** regla de negocio violada,\n**422** datos inválidos.\n",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Sistema"
+        ],
+        "summary": "Estado del servicio",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/veterinarios": {
+      "get": {
+        "tags": [
+          "Veterinarios"
+        ],
+        "summary": "Listar veterinarios",
+        "operationId": "listar_veterinarios_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/VeterinarioOut"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Veterinarios Get"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Veterinarios"
+        ],
+        "summary": "Registrar veterinario",
+        "operationId": "registrar_veterinarios_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VeterinarioIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VeterinarioOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expedientes": {
+      "post": {
+        "tags": [
+          "Expedientes clínicos"
+        ],
+        "summary": "Registrar propietario (US-04: 409 si el celular ya existe)",
+        "operationId": "registrar_propietario_expedientes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropietarioIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpedienteOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expedientes/{celular}": {
+      "get": {
+        "tags": [
+          "Expedientes clínicos"
+        ],
+        "summary": "Buscar expediente por celular",
+        "operationId": "obtener_expediente_expedientes__celular__get",
+        "parameters": [
+          {
+            "name": "celular",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Celular"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpedienteOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/expedientes/{celular}/mascotas": {
+      "post": {
+        "tags": [
+          "Expedientes clínicos"
+        ],
+        "summary": "Vincular mascota al propietario (US-06)",
+        "operationId": "registrar_mascota_expedientes__celular__mascotas_post",
+        "parameters": [
+          {
+            "name": "celular",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Celular"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MascotaIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpedienteOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/expedientes/{celular}/mascotas/fusion": {
+      "post": {
+        "tags": [
+          "Expedientes clínicos"
+        ],
+        "summary": "Fusionar expedientes de mascota duplicados (US-05)",
+        "operationId": "fusionar_expedientes__celular__mascotas_fusion_post",
+        "parameters": [
+          {
+            "name": "celular",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Celular"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FusionIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpedienteOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/expedientes/{celular}/mascotas-con-nota": {
+      "post": {
+        "tags": [
+          "Expedientes clínicos"
+        ],
+        "summary": "CU-03: vincular mascota y guardar nota médica en una sola transacción",
+        "operationId": "vincular_y_guardar_expedientes__celular__mascotas_con_nota_post",
+        "parameters": [
+          {
+            "name": "celular",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Celular"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MascotaNotaIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpedienteOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/mascotas/{mascota_id}/historial": {
+      "get": {
+        "tags": [
+          "Expedientes clínicos"
+        ],
+        "summary": "Consultar historial de la mascota (Query, CE-002)",
+        "operationId": "historial_mascotas__mascota_id__historial_get",
+        "parameters": [
+          {
+            "name": "mascota_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mascota Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistorialOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/mascotas/{mascota_id}/notas": {
+      "post": {
+        "tags": [
+          "Expedientes clínicos"
+        ],
+        "summary": "Guardar nota clínica y receta (US-07); firmar=true => 'Guardar y Firmar' (US-08)",
+        "operationId": "guardar_nota_mascotas__mascota_id__notas_post",
+        "parameters": [
+          {
+            "name": "mascota_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mascota Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotaIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotaOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/notas/{nota_id}": {
+      "put": {
+        "tags": [
+          "Expedientes clínicos"
+        ],
+        "summary": "Modificar nota en borrador (409 si ya está firmada, US-08)",
+        "operationId": "modificar_nota_notas__nota_id__put",
+        "parameters": [
+          {
+            "name": "nota_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Nota Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotaUpdateIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotaOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/notas/{nota_id}/firma": {
+      "post": {
+        "tags": [
+          "Expedientes clínicos"
+        ],
+        "summary": "Firmar nota clínica (US-08)",
+        "operationId": "firmar_notas__nota_id__firma_post",
+        "parameters": [
+          {
+            "name": "nota_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Nota Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FirmaIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotaOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/citas": {
+      "post": {
+        "tags": [
+          "Agenda y citas"
+        ],
+        "summary": "CU-01: agendar cita con duración automática (US-01); 409 si hay traslape",
+        "operationId": "agendar_citas_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CitaIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaCitaOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/emergencias": {
+      "post": {
+        "tags": [
+          "Agenda y citas"
+        ],
+        "summary": "CU-02: registrar emergencia, prioridad máxima y alerta al veterinario (US-03)",
+        "operationId": "emergencia_emergencias_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmergenciaIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfirmacionOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/citas/espacios-libres": {
+      "get": {
+        "tags": [
+          "Agenda y citas"
+        ],
+        "summary": "Espacios libres del día para un veterinario y servicio (US-02)",
+        "operationId": "espacios_libres_citas_espacios_libres_get",
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Fecha"
+            }
+          },
+          {
+            "name": "veterinario_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Veterinario Id"
+            }
+          },
+          {
+            "name": "tipo",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "enum": [
+                "consulta",
+                "vacuna",
+                "cirugia"
+              ],
+              "type": "string",
+              "title": "Tipo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EspacioOut"
+                  },
+                  "title": "Response Espacios Libres Citas Espacios Libres Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/citas/cola": {
+      "get": {
+        "tags": [
+          "Agenda y citas"
+        ],
+        "summary": "Cola de espera del día: emergencias primero (US-03)",
+        "operationId": "cola_citas_cola_get",
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Fecha"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CitaOut"
+                  },
+                  "title": "Response Cola Citas Cola Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/citas/{cita_id}/transiciones": {
+      "post": {
+        "tags": [
+          "Agenda y citas"
+        ],
+        "summary": "State Machine de la cita: aprobar, completar o cancelar (409 si es inválida)",
+        "operationId": "transicionar_citas__cita_id__transiciones_post",
+        "parameters": [
+          {
+            "name": "cita_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cita Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransicionIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CitaOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/hospitalizacion/ingresos": {
+      "post": {
+        "tags": [
+          "Hospitalización"
+        ],
+        "summary": "CU-04: internar paciente; 409 'Capacidad máxima de jaulas alcanzada' con 10 ocupadas",
+        "operationId": "ingresar_hospitalizacion_ingresos_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngresoIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadoJaulasOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hospitalizacion/altas/{mascota_id}": {
+      "post": {
+        "tags": [
+          "Hospitalización"
+        ],
+        "summary": "Dar de alta (libera jaula)",
+        "operationId": "alta_hospitalizacion_altas__mascota_id__post",
+        "parameters": [
+          {
+            "name": "mascota_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mascota Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadoJaulasOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/hospitalizacion/signos-vitales": {
+      "post": {
+        "tags": [
+          "Hospitalización"
+        ],
+        "summary": "Registrar signos vitales (US-11)",
+        "operationId": "signos_hospitalizacion_signos_vitales_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignosIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hospitalizacion/signos-pendientes": {
+      "get": {
+        "tags": [
+          "Hospitalización"
+        ],
+        "summary": "Pacientes con toma de signos vencida (US-11)",
+        "operationId": "pendientes_hospitalizacion_signos_pendientes_get",
+        "parameters": [
+          {
+            "name": "horas",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 6,
+              "minimum": 1,
+              "default": 4,
+              "title": "Horas"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SignosPendienteOut"
+                  },
+                  "title": "Response Pendientes Hospitalizacion Signos Pendientes Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/hospitalizacion/ocupacion": {
+      "get": {
+        "tags": [
+          "Hospitalización"
+        ],
+        "summary": "Ocupación de jaulas en tiempo real (US-15)",
+        "operationId": "ocupacion_hospitalizacion_ocupacion_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadoJaulasOut"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reportes/productividad": {
+      "get": {
+        "tags": [
+          "Reportes y reglas"
+        ],
+        "summary": "Atenciones completadas por veterinario (US-14)",
+        "operationId": "productividad_reportes_productividad_get",
+        "parameters": [
+          {
+            "name": "desde",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Desde"
+            }
+          },
+          {
+            "name": "hasta",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Hasta"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductividadOut"
+                  },
+                  "title": "Response Productividad Reportes Productividad Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/reportes/vacunas-pendientes": {
+      "get": {
+        "tags": [
+          "Reportes y reglas"
+        ],
+        "summary": "Mascotas con vacuna atrasada y contacto del dueño (US-13)",
+        "operationId": "vacunas_pendientes_reportes_vacunas_pendientes_get",
+        "parameters": [
+          {
+            "name": "desde",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Desde"
+            }
+          },
+          {
+            "name": "hasta",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Hasta"
+            }
+          },
+          {
+            "name": "formato",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "json",
+                "csv"
+              ],
+              "type": "string",
+              "default": "json",
+              "title": "Formato"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON o CSV según `formato`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VacunaPendienteOut"
+                  },
+                  "title": "Response Vacunas Pendientes Reportes Vacunas Pendientes Get"
+                }
+              },
+              "text/csv": {}
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/reglas/operaciones/evaluar": {
+      "post": {
+        "tags": [
+          "Reportes y reglas"
+        ],
+        "summary": "Evalúa las Specifications compuestas del paquete de pruebas (AND/OR/NOT)",
+        "operationId": "evaluar_reglas_operaciones_evaluar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluarOperacionIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluacionOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notificaciones": {
+      "get": {
+        "tags": [
+          "Reportes y reglas"
+        ],
+        "summary": "Outbox de notificaciones generadas por Domain Events (WhatsApp)",
+        "operationId": "notificaciones_notificaciones_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Notificaciones Notificaciones Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CitaIn": {
+        "properties": {
+          "mascota_id": {
+            "type": "string",
+            "title": "Mascota Id"
+          },
+          "veterinario_id": {
+            "type": "string",
+            "title": "Veterinario Id"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "consulta",
+              "vacuna",
+              "cirugia"
+            ],
+            "title": "Tipo"
+          },
+          "inicio": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Inicio",
+            "examples": [
+              "2026-11-10T09:00:00"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "mascota_id",
+          "veterinario_id",
+          "tipo",
+          "inicio"
+        ],
+        "title": "CitaIn"
+      },
+      "CitaOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "mascota_id": {
+            "type": "string",
+            "title": "Mascota Id"
+          },
+          "veterinario_id": {
+            "type": "string",
+            "title": "Veterinario Id"
+          },
+          "tipo": {
+            "type": "string",
+            "title": "Tipo"
+          },
+          "inicio": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Inicio"
+          },
+          "fin": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fin"
+          },
+          "estado": {
+            "type": "string",
+            "title": "Estado"
+          },
+          "es_emergencia": {
+            "type": "boolean",
+            "title": "Es Emergencia"
+          },
+          "requiere_reprogramacion": {
+            "type": "boolean",
+            "title": "Requiere Reprogramacion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "mascota_id",
+          "veterinario_id",
+          "tipo",
+          "inicio",
+          "fin",
+          "estado",
+          "es_emergencia",
+          "requiere_reprogramacion"
+        ],
+        "title": "CitaOut"
+      },
+      "ConfirmacionOut": {
+        "properties": {
+          "cita": {
+            "$ref": "#/components/schemas/CitaOut"
+          },
+          "posicion_en_cola": {
+            "type": "integer",
+            "title": "Posicion En Cola"
+          },
+          "mensaje": {
+            "type": "string",
+            "title": "Mensaje"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cita",
+          "posicion_en_cola",
+          "mensaje"
+        ],
+        "title": "ConfirmacionOut"
+      },
+      "EmergenciaIn": {
+        "properties": {
+          "mascota_id": {
+            "type": "string",
+            "title": "Mascota Id"
+          },
+          "veterinario_id": {
+            "type": "string",
+            "title": "Veterinario Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mascota_id",
+          "veterinario_id"
+        ],
+        "title": "EmergenciaIn"
+      },
+      "ErrorOut": {
+        "properties": {
+          "error": {
+            "type": "string",
+            "title": "Error",
+            "examples": [
+              "CapacidadMaximaJaulasAlcanzada"
+            ]
+          },
+          "detalle": {
+            "type": "string",
+            "title": "Detalle",
+            "examples": [
+              "Capacidad máxima de jaulas alcanzada"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "error",
+          "detalle"
+        ],
+        "title": "ErrorOut"
+      },
+      "EspacioOut": {
+        "properties": {
+          "inicio": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Inicio"
+          },
+          "fin": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fin"
+          }
+        },
+        "type": "object",
+        "required": [
+          "inicio",
+          "fin"
+        ],
+        "title": "EspacioOut"
+      },
+      "EstadoJaulasOut": {
+        "properties": {
+          "ocupadas": {
+            "type": "integer",
+            "title": "Ocupadas"
+          },
+          "disponibles": {
+            "type": "integer",
+            "title": "Disponibles"
+          },
+          "capacidad": {
+            "type": "integer",
+            "title": "Capacidad"
+          },
+          "porcentaje": {
+            "type": "number",
+            "title": "Porcentaje"
+          },
+          "jaulas": {
+            "items": {
+              "$ref": "#/components/schemas/JaulaOut"
+            },
+            "type": "array",
+            "title": "Jaulas"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ocupadas",
+          "disponibles",
+          "capacidad",
+          "porcentaje",
+          "jaulas"
+        ],
+        "title": "EstadoJaulasOut"
+      },
+      "EvaluacionOut": {
+        "properties": {
+          "operacion_id": {
+            "type": "string",
+            "title": "Operacion Id"
+          },
+          "total_mxn": {
+            "type": "string",
+            "title": "Total Mxn"
+          },
+          "puede_procesarse": {
+            "type": "boolean",
+            "title": "Puede Procesarse"
+          },
+          "beneficio_referencia": {
+            "type": "boolean",
+            "title": "Beneficio Referencia"
+          },
+          "recursos_habilitados": {
+            "type": "boolean",
+            "title": "Recursos Habilitados"
+          }
+        },
+        "type": "object",
+        "required": [
+          "operacion_id",
+          "total_mxn",
+          "puede_procesarse",
+          "beneficio_referencia",
+          "recursos_habilitados"
+        ],
+        "title": "EvaluacionOut"
+      },
+      "EvaluarOperacionIn": {
+        "properties": {
+          "operacion_id": {
+            "type": "string",
+            "title": "Operacion Id",
+            "default": "demo"
+          },
+          "actor_activo": {
+            "type": "boolean",
+            "title": "Actor Activo"
+          },
+          "actor_preferente": {
+            "type": "boolean",
+            "title": "Actor Preferente"
+          },
+          "promocion_activa": {
+            "type": "boolean",
+            "title": "Promocion Activa",
+            "default": false
+          },
+          "autorizado": {
+            "type": "boolean",
+            "title": "Autorizado",
+            "default": true
+          },
+          "lineas": {
+            "items": {
+              "$ref": "#/components/schemas/LineaOperacionIn"
+            },
+            "type": "array",
+            "title": "Lineas",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "actor_activo",
+          "actor_preferente"
+        ],
+        "title": "EvaluarOperacionIn"
+      },
+      "ExpedienteOut": {
+        "properties": {
+          "propietario_id": {
+            "type": "string",
+            "title": "Propietario Id"
+          },
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "celular": {
+            "type": "string",
+            "title": "Celular"
+          },
+          "mascotas": {
+            "items": {
+              "$ref": "#/components/schemas/MascotaOut"
+            },
+            "type": "array",
+            "title": "Mascotas"
+          },
+          "notas": {
+            "items": {
+              "$ref": "#/components/schemas/NotaOut"
+            },
+            "type": "array",
+            "title": "Notas"
+          }
+        },
+        "type": "object",
+        "required": [
+          "propietario_id",
+          "nombre",
+          "celular",
+          "mascotas",
+          "notas"
+        ],
+        "title": "ExpedienteOut"
+      },
+      "FirmaIn": {
+        "properties": {
+          "veterinario_id": {
+            "type": "string",
+            "title": "Veterinario Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "veterinario_id"
+        ],
+        "title": "FirmaIn"
+      },
+      "FusionIn": {
+        "properties": {
+          "origen_id": {
+            "type": "string",
+            "title": "Origen Id",
+            "description": "Mascota duplicada que se elimina"
+          },
+          "destino_id": {
+            "type": "string",
+            "title": "Destino Id",
+            "description": "Mascota que conserva el historial consolidado"
+          }
+        },
+        "type": "object",
+        "required": [
+          "origen_id",
+          "destino_id"
+        ],
+        "title": "FusionIn"
+      },
+      "HistorialOut": {
+        "properties": {
+          "mascota": {
+            "$ref": "#/components/schemas/MascotaOut"
+          },
+          "propietario": {
+            "type": "string",
+            "title": "Propietario"
+          },
+          "celular": {
+            "type": "string",
+            "title": "Celular"
+          },
+          "notas": {
+            "items": {
+              "$ref": "#/components/schemas/NotaOut"
+            },
+            "type": "array",
+            "title": "Notas"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mascota",
+          "propietario",
+          "celular",
+          "notas"
+        ],
+        "title": "HistorialOut"
+      },
+      "IngresoIn": {
+        "properties": {
+          "mascota_id": {
+            "type": "string",
+            "title": "Mascota Id"
+          },
+          "veterinario_id": {
+            "type": "string",
+            "title": "Veterinario Id"
+          },
+          "motivo_ingreso": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Motivo Ingreso"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mascota_id",
+          "veterinario_id",
+          "motivo_ingreso"
+        ],
+        "title": "IngresoIn"
+      },
+      "ItemRecetaIn": {
+        "properties": {
+          "medicamento": {
+            "type": "string",
+            "title": "Medicamento",
+            "examples": [
+              "Amoxicilina"
+            ]
+          },
+          "dosis": {
+            "type": "string",
+            "title": "Dosis",
+            "examples": [
+              "1 tableta cada 12 h"
+            ]
+          },
+          "indicaciones": {
+            "type": "string",
+            "title": "Indicaciones",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "medicamento",
+          "dosis"
+        ],
+        "title": "ItemRecetaIn"
+      },
+      "JaulaOut": {
+        "properties": {
+          "numero": {
+            "type": "integer",
+            "title": "Numero"
+          },
+          "estado": {
+            "type": "string",
+            "title": "Estado"
+          },
+          "mascota_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mascota Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "numero",
+          "estado",
+          "mascota_id"
+        ],
+        "title": "JaulaOut"
+      },
+      "LineaOperacionIn": {
+        "properties": {
+          "recurso_id": {
+            "type": "string",
+            "title": "Recurso Id"
+          },
+          "precio": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Precio"
+          },
+          "cantidad": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Cantidad"
+          },
+          "habilitado": {
+            "type": "boolean",
+            "title": "Habilitado",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "recurso_id",
+          "precio",
+          "cantidad"
+        ],
+        "title": "LineaOperacionIn"
+      },
+      "MascotaIn": {
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Nombre",
+            "examples": [
+              "Firulais"
+            ]
+          },
+          "especie": {
+            "type": "string",
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Especie",
+            "examples": [
+              "perro"
+            ]
+          },
+          "raza": {
+            "type": "string",
+            "title": "Raza",
+            "default": ""
+          },
+          "sexo": {
+            "type": "string",
+            "title": "Sexo",
+            "default": ""
+          },
+          "fecha_nacimiento": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha Nacimiento"
+          },
+          "peso": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Peso"
+          },
+          "alergias": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Alergias",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre",
+          "especie"
+        ],
+        "title": "MascotaIn"
+      },
+      "MascotaNotaIn": {
+        "properties": {
+          "mascota": {
+            "$ref": "#/components/schemas/MascotaIn"
+          },
+          "nota": {
+            "$ref": "#/components/schemas/NotaIn"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mascota",
+          "nota"
+        ],
+        "title": "MascotaNotaIn"
+      },
+      "MascotaOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "especie": {
+            "type": "string",
+            "title": "Especie"
+          },
+          "raza": {
+            "type": "string",
+            "title": "Raza"
+          },
+          "sexo": {
+            "type": "string",
+            "title": "Sexo"
+          },
+          "fecha_nacimiento": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha Nacimiento"
+          },
+          "peso": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Peso"
+          },
+          "alergias": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Alergias"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nombre",
+          "especie",
+          "raza",
+          "sexo",
+          "fecha_nacimiento",
+          "peso",
+          "alergias"
+        ],
+        "title": "MascotaOut"
+      },
+      "NotaIn": {
+        "properties": {
+          "veterinario_id": {
+            "type": "string",
+            "title": "Veterinario Id"
+          },
+          "diagnostico": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Diagnostico"
+          },
+          "notas": {
+            "type": "string",
+            "title": "Notas",
+            "default": ""
+          },
+          "receta": {
+            "items": {
+              "$ref": "#/components/schemas/ItemRecetaIn"
+            },
+            "type": "array",
+            "title": "Receta",
+            "default": []
+          },
+          "peso": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Peso"
+          },
+          "alergias": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Alergias",
+            "default": []
+          },
+          "firmar": {
+            "type": "boolean",
+            "title": "Firmar",
+            "description": "Equivale a 'Guardar y Firmar' (US-08)",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "veterinario_id",
+          "diagnostico"
+        ],
+        "title": "NotaIn"
+      },
+      "NotaOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "mascota_id": {
+            "type": "string",
+            "title": "Mascota Id"
+          },
+          "veterinario_id": {
+            "type": "string",
+            "title": "Veterinario Id"
+          },
+          "diagnostico": {
+            "type": "string",
+            "title": "Diagnostico"
+          },
+          "notas": {
+            "type": "string",
+            "title": "Notas"
+          },
+          "receta": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Receta"
+          },
+          "estado": {
+            "type": "string",
+            "title": "Estado"
+          },
+          "firmada_por": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firmada Por"
+          },
+          "sello": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sello"
+          },
+          "creada_en": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Creada En"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "mascota_id",
+          "veterinario_id",
+          "diagnostico",
+          "notas",
+          "receta",
+          "estado",
+          "firmada_por",
+          "sello",
+          "creada_en"
+        ],
+        "title": "NotaOut"
+      },
+      "NotaUpdateIn": {
+        "properties": {
+          "diagnostico": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Diagnostico"
+          },
+          "notas": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notas"
+          },
+          "receta": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ItemRecetaIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Receta"
+          }
+        },
+        "type": "object",
+        "title": "NotaUpdateIn"
+      },
+      "ProductividadOut": {
+        "properties": {
+          "veterinario_id": {
+            "type": "string",
+            "title": "Veterinario Id"
+          },
+          "veterinario": {
+            "type": "string",
+            "title": "Veterinario"
+          },
+          "consultas": {
+            "type": "integer",
+            "title": "Consultas"
+          },
+          "vacunas": {
+            "type": "integer",
+            "title": "Vacunas"
+          },
+          "cirugias": {
+            "type": "integer",
+            "title": "Cirugias"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "veterinario_id",
+          "veterinario",
+          "consultas",
+          "vacunas",
+          "cirugias",
+          "total"
+        ],
+        "title": "ProductividadOut"
+      },
+      "PropietarioIn": {
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Nombre",
+            "examples": [
+              "Ana Martínez"
+            ]
+          },
+          "celular": {
+            "type": "string",
+            "title": "Celular",
+            "description": "10 a 13 dígitos; único por propietario",
+            "examples": [
+              "8112345678"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre",
+          "celular"
+        ],
+        "title": "PropietarioIn"
+      },
+      "RespuestaCitaOut": {
+        "properties": {
+          "cita": {
+            "$ref": "#/components/schemas/CitaOut"
+          },
+          "espacios_libres": {
+            "items": {
+              "$ref": "#/components/schemas/EspacioOut"
+            },
+            "type": "array",
+            "title": "Espacios Libres"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cita",
+          "espacios_libres"
+        ],
+        "title": "RespuestaCitaOut"
+      },
+      "SignosIn": {
+        "properties": {
+          "mascota_id": {
+            "type": "string",
+            "title": "Mascota Id"
+          },
+          "temperatura": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Temperatura",
+            "examples": [
+              "38.5"
+            ]
+          },
+          "frecuencia_cardiaca": {
+            "type": "integer",
+            "title": "Frecuencia Cardiaca"
+          },
+          "frecuencia_respiratoria": {
+            "type": "integer",
+            "title": "Frecuencia Respiratoria"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mascota_id",
+          "temperatura",
+          "frecuencia_cardiaca",
+          "frecuencia_respiratoria"
+        ],
+        "title": "SignosIn"
+      },
+      "SignosPendienteOut": {
+        "properties": {
+          "mascota_id": {
+            "type": "string",
+            "title": "Mascota Id"
+          },
+          "jaula": {
+            "type": "integer",
+            "title": "Jaula"
+          },
+          "horas_desde_ultima_toma": {
+            "type": "number",
+            "title": "Horas Desde Ultima Toma"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mascota_id",
+          "jaula",
+          "horas_desde_ultima_toma"
+        ],
+        "title": "SignosPendienteOut"
+      },
+      "TransicionIn": {
+        "properties": {
+          "accion": {
+            "type": "string",
+            "enum": [
+              "aprobar",
+              "completar",
+              "cancelar"
+            ],
+            "title": "Accion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "accion"
+        ],
+        "title": "TransicionIn"
+      },
+      "VacunaPendienteOut": {
+        "properties": {
+          "cita_id": {
+            "type": "string",
+            "title": "Cita Id"
+          },
+          "mascota_id": {
+            "type": "string",
+            "title": "Mascota Id"
+          },
+          "mascota": {
+            "type": "string",
+            "title": "Mascota"
+          },
+          "especie": {
+            "type": "string",
+            "title": "Especie"
+          },
+          "propietario": {
+            "type": "string",
+            "title": "Propietario"
+          },
+          "celular": {
+            "type": "string",
+            "title": "Celular"
+          },
+          "fecha_cita": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fecha Cita"
+          },
+          "estado": {
+            "type": "string",
+            "title": "Estado"
+          },
+          "dias_atraso": {
+            "type": "integer",
+            "title": "Dias Atraso"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cita_id",
+          "mascota_id",
+          "mascota",
+          "especie",
+          "propietario",
+          "celular",
+          "fecha_cita",
+          "estado",
+          "dias_atraso"
+        ],
+        "title": "VacunaPendienteOut"
+      },
+      "VeterinarioIn": {
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Nombre",
+            "examples": [
+              "Dra. Laura López"
+            ]
+          },
+          "cedula": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Cedula",
+            "examples": [
+              "CED-123456"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre",
+          "cedula"
+        ],
+        "title": "VeterinarioIn"
+      },
+      "VeterinarioOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "cedula": {
+            "type": "string",
+            "title": "Cedula"
+          },
+          "activo": {
+            "type": "boolean",
+            "title": "Activo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nombre",
+          "cedula",
+          "activo"
+        ],
+        "title": "VeterinarioOut"
+      }
+    }
+  }
+}

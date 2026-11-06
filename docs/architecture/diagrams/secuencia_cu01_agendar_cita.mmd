@@ -1,0 +1,28 @@
+sequenceDiagram
+    autonumber
+    actor Recepcion as Recepción
+    box Aplicación
+    participant CitaApplicationService
+    participant IUnitOfWork
+    participant CitaAgendadaEventHandler
+    participant INotificacionService
+    end
+    box Dominio
+    participant IAgendaRepository
+    participant Agenda
+    participant IServicioCita
+    end
+    Recepcion->>CitaApplicationService: agendarCita(SolicitudCitaDto)
+    CitaApplicationService->>IUnitOfWork: iniciar()
+    CitaApplicationService->>IAgendaRepository: getByFecha(fecha)
+    IAgendaRepository-->>CitaApplicationService: Agenda
+    CitaApplicationService->>Agenda: agendarCita(tipo, veterinarioId, hora)
+    Agenda->>IServicioCita: duracion()
+    IServicioCita-->>Agenda: tiempo predeterminado del servicio
+    Note over Agenda: Valida que no exista traslape y bloquea el bloque horario (N-001)
+    Agenda-->>CitaApplicationService: Cita + CitaAgendadaEvent
+    CitaApplicationService->>IAgendaRepository: save(agenda)
+    CitaApplicationService->>IUnitOfWork: commit()
+    IUnitOfWork->>CitaAgendadaEventHandler: handle(CitaAgendadaEvent)
+    CitaAgendadaEventHandler->>INotificacionService: programarRecordatorio(cita)
+    CitaApplicationService-->>Recepcion: RespuestaCitaDto (bloque asignado y espacios libres)

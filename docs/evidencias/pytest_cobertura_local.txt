@@ -1,0 +1,102 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.14.5, pytest-8.4.2, pluggy-1.7.0
+rootdir: C:\Users\sergi\Downloads\PIA_EQ4_CLN\PIA_EQ4_CLN
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.16.0, cov-7.1.0
+collected 112 items
+
+tests\integration\test_api_citas.py ..........                           [  8%]
+tests\integration\test_api_expedientes.py ............                   [ 19%]
+tests\integration\test_api_hospitalizacion.py .......                    [ 25%]
+tests\integration\test_api_reportes.py ......                            [ 31%]
+tests\integration\test_persistencia.py ......                            [ 36%]
+tests\unit\test_agenda.py ..........                                     [ 45%]
+tests\unit\test_expediente.py ........                                   [ 52%]
+tests\unit\test_hospitalizacion.py ........                              [ 59%]
+tests\unit\test_reglas_operacion.py ..................                   [ 75%]
+tests\unit\test_specification.py ........                                [ 83%]
+tests\unit\test_state_machine.py ........                                [ 90%]
+python : C:\Users\sergi\AppData\Local\Programs\Python\Python314\Lib\collections\__init__.py:455: ResourceWarning: 
+unclosed database in <sqlite3.Connection object at 0x000001C9A10D9C60>
+En línea: 1 Carácter: 1
++ python -m pytest 2>&1 | Out-File -Encoding utf8 docs\evidencias\pytes ...
++ ~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\Users\sergi\...0001C9A10D9C60>:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  result = tuple_new(cls, iterable)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\sergi\AppData\Local\Programs\Python\Python314\Lib\collections\__init__.py:455: ResourceWarning: unclosed 
+database in <sqlite3.Connection object at 0x000001C9A129AE30>
+  result = tuple_new(cls, iterable)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\sergi\AppData\Local\Programs\Python\Python314\Lib\collections\__init__.py:455: ResourceWarning: unclosed 
+database in <sqlite3.Connection object at 0x000001C9A12E9D50>
+  result = tuple_new(cls, iterable)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\sergi\AppData\Local\Programs\Python\Python314\Lib\collections\__init__.py:455: ResourceWarning: unclosed 
+database in <sqlite3.Connection object at 0x000001C9A10D9120>
+  result = tuple_new(cls, iterable)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+tests\unit\test_value_objects.py ...........                             [100%]
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\sergi\Downloads\PIA_EQ4_CLN\PIA_EQ4_CLN\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.14.5-final-0 _______________
+
+Name                                   Stmts   Miss  Cover   Missing
+--------------------------------------------------------------------
+src\__init__.py                            0      0   100%
+src\api\__init__.py                        0      0   100%
+src\api\container.py                      28      0   100%
+src\api\dependencies.py                    4      0   100%
+src\api\main.py                           31      1    97%   30
+src\api\routers\__init__.py                0      0   100%
+src\api\routers\citas.py                  23      0   100%
+src\api\routers\expedientes.py            44      0   100%
+src\api\routers\hospitalizacion.py        24      0   100%
+src\api\routers\reportes.py               34      0   100%
+src\api\routers\veterinarios.py           12      0   100%
+src\api\schemas.py                        80      0   100%
+src\application\__init__.py                0      0   100%
+src\application\commands.py               23      0   100%
+src\application\dtos.py                  141      0   100%
+src\application\evaluacion_reglas.py      58      0   100%
+src\application\event_bus.py              28      2    93%   31-32
+src\application\notificaciones.py          3      0   100%
+src\application\queries.py                72      1    99%   116
+src\application\services.py              214      7    97%   47, 85-86, 124, 177, 184, 197
+src\application\unit_of_work.py           10      0   100%
+src\domain\__init__.py                     0      0   100%
+src\domain\agenda.py                      83      0   100%
+src\domain\base.py                         8      0   100%
+src\domain\estados.py                     26      0   100%
+src\domain\events.py                      23      0   100%
+src\domain\exceptions.py                  27      0   100%
+src\domain\expediente.py                 124      3    98%   78, 148, 161
+src\domain\hospitalizacion.py             82      0   100%
+src\domain\operacion.py                   40      0   100%
+src\domain\repositories.py                12      0   100%
+src\domain\servicios.py                   21      1    95%   46
+src\domain\servicios_dominio.py           17      0   100%
+src\domain\specification.py               28      0   100%
+src\domain\specifications.py              64      0   100%
+src\domain\value_objects.py               69      3    96%   35, 50-51
+src\domain\veterinario.py                 10      2    80%   17, 19
+src\infrastructure\__init__.py             0      0   100%
+src\infrastructure\database.py            35      2    94%   24, 34
+src\infrastructure\notificaciones.py      25      0   100%
+src\infrastructure\orm.py                 74      0   100%
+src\infrastructure\repositories.py       137      3    98%   98-99, 208
+src\infrastructure\unit_of_work.py        37      7    81%   43-48, 53
+--------------------------------------------------------------------
+TOTAL                                   1771     32    98%
+Coverage XML written to file coverage.xml
+Required test coverage of 80% reached. Total coverage: 98.19%
+======================= 112 passed, 1 warning in 5.67s ========================
