@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "VetCare 24 API",
-    "description": "\nAPI REST de **VetCare 24** (PIA – Componentes de Lógica de Negocios, Equipo 4).\n\nReglas principales: celular único por propietario (N-004), nota firmada inmutable (N-005),\nmáximo 10 jaulas ocupadas (BR-002), emergencias con prioridad máxima (N-007) y\nState Machine de citas. Errores: **404** no encontrado, **409** regla de negocio violada,\n**422** datos inválidos.\n",
+    "description": "\nAPI REST de **VetCare 24** (PIA – Componentes de Lógica de Negocios, Equipo 4).\n\nReglas principales: celular único por propietario (N-004), nota firmada inmutable (N-005),\nmáximo 10 jaulas ocupadas (BR-002), emergencias con prioridad máxima (N-007) y\nState Machine de citas. Errores: **404** no encontrado, **409** regla de negocio violada,\n**422** datos inválidos.\n\nPanel web para el personal de la clínica: [`/app/`](/app/).\n",
     "version": "1.0.0"
   },
   "paths": {

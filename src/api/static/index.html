@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VetCare 24 · Panel de la clínica</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230D1B2A'/%3E%3Cg fill='%233DDBB8'%3E%3Cellipse cx='20' cy='24' rx='5' ry='7'/%3E%3Cellipse cx='32' cy='18' rx='5' ry='7'/%3E%3Cellipse cx='44' cy='24' rx='5' ry='7'/%3E%3Cpath d='M32 30c-9 0-15 9-15 15 0 5 4 7 8 6 3-1 4-2 7-2s4 1 7 2c4 1 8-1 8-6 0-6-6-15-15-15z'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <a class="brand" href="#/inicio">
+        <span class="brand-logo" data-icon="paw"></span>
+        <span class="brand-text"><b>VetCare 24</b><small>Clínica abierta 24/7</small></span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#/inicio" data-route="inicio"><span data-icon="home"></span>Inicio</a>
+        <a href="#/recepcion" data-route="recepcion"><span data-icon="users"></span>Recepción</a>
+        <a href="#/agenda" data-route="agenda"><span data-icon="calendar"></span>Agenda</a>
+        <a href="#/hospitalizacion" data-route="hospitalizacion"><span data-icon="bed"></span>Hospitalización</a>
+        <a href="#/reportes" data-route="reportes"><span data-icon="chart"></span>Reportes</a>
+        <a href="#/avisos" data-route="avisos"><span data-icon="bell"></span>Avisos WhatsApp</a>
+        <a href="#/equipo" data-route="equipo"><span data-icon="stetho"></span>Veterinarios</a>
+      </nav>
+      <button class="btn-emergency" id="btnEmergenciaGlobal" type="button"><span data-icon="siren"></span>Emergencia</button>
+      <div class="sidebar-foot">
+        <a href="/docs" target="_blank" rel="noopener"><span data-icon="code"></span>API · Swagger</a>
+        <span class="status" id="apiStatus"><i></i>Conectando…</span>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú"><span data-icon="menu"></span></button>
+        <div class="topbar-title">
+          <p class="eyebrow" id="pageEyebrow">VetCare 24</p>
+          <h1 id="pageTitle">Inicio</h1>
+        </div>
+        <div class="topbar-right">
+          <label class="vet-select">
+            <span data-icon="stetho"></span>
+            <select id="vetActual" aria-label="Veterinario en turno"></select>
+          </label>
+          <span class="clock" id="clock"></span>
+        </div>
+      </header>
+      <main class="view" id="view" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-head">
+        <h2 id="modalTitle"></h2>
+        <button class="icon-btn" type="button" data-close aria-label="Cerrar"><span data-icon="x"></span></button>
+      </header>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,14 +1,18 @@
 """Punto de entrada FastAPI. Ejecutar con:  uvicorn src.api.main:create_app --factory"""
 from datetime import datetime
+from pathlib import Path
 from typing import Callable
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
 from src.domain.exceptions import ConflictoDeNegocio, DomainError, NoEncontrado, ValidacionDominio
 
 from .container import Contenedor
 from .routers import citas, expedientes, hospitalizacion, reportes, veterinarios
+
+PANEL_DIR = Path(__file__).parent / "static"
 
 DESCRIPCION = """
 API REST de **VetCare 24** (PIA – Componentes de Lógica de Negocios, Equipo 4).
@@ -17,6 +21,8 @@ Reglas principales: celular único por propietario (N-004), nota firmada inmutab
 máximo 10 jaulas ocupadas (BR-002), emergencias con prioridad máxima (N-007) y
 State Machine de citas. Errores: **404** no encontrado, **409** regla de negocio violada,
 **422** datos inválidos.
+
+Panel web para el personal de la clínica: [`/app/`](/app/).
 """
 
 
@@ -43,7 +49,11 @@ def create_app(database_url: str | None = None, ahora: Callable[[], datetime] = 
 
     @app.get("/", include_in_schema=False)
     def raiz() -> RedirectResponse:
-        return RedirectResponse(url="/docs")
+        return RedirectResponse(url="/app/")
+
+    @app.get("/app", include_in_schema=False)
+    def panel_sin_diagonal() -> RedirectResponse:
+        return RedirectResponse(url="/app/")
 
     @app.get("/health", tags=["Sistema"], summary="Estado del servicio")
     def health() -> dict:
@@ -51,4 +61,6 @@ def create_app(database_url: str | None = None, ahora: Callable[[], datetime] = 
 
     for modulo in (veterinarios, expedientes, citas, hospitalizacion, reportes):
         app.include_router(modulo.router)
+    # Panel web (HTML/CSS/JS estáticos): solo consume la API; las reglas viven en el dominio.
+    app.mount("/app", StaticFiles(directory=PANEL_DIR, html=True), name="panel")
     return app
