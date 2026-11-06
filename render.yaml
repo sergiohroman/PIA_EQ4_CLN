@@ -1,0 +1,15 @@
+# Blueprint de despliegue en Render (https://render.com). Verifique planes vigentes antes de usarlo.
+services:
+  - type: web
+    name: vetcare24-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vetcare24-db
+          property: connectionString
+databases:
+  - name: vetcare24-db
+    plan: free
